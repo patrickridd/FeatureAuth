@@ -3,6 +3,40 @@
 All notable changes to FeatureAuth are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-06-10
+
+### Added
+- **Full localization** via a String Catalog (`Localizable.xcstrings`) shipped
+  with the package. Every user-facing string — field labels, placeholders,
+  buttons, links, dividers, accessibility labels, alerts, and validation
+  messages — now resolves from the package bundle (`.module`).
+- English (`en`) and Spanish (`es`) translations included out of the box.
+- `defaultLocalization: "en"` declared in `Package.swift`.
+
+### Changed
+- `AuthConfiguration` defaults are now localized. Its initializer parameters
+  are optional (`nil` → localized fallback), so existing call sites that pass
+  explicit copy are unaffected.
+
+## [1.2.0] - 2026-06-10
+
+### Added
+- `AuthService` protocol — the UI now depends on this abstraction instead of
+  hardcoded mock logic, so you can inject any backend (Firebase, Supabase,
+  your own API) from the app's composition root without touching the UI.
+- `AuthUser` — a lightweight, backend-agnostic user model returned by the service.
+- `SocialAuthProvider` and `AuthServiceError` supporting types.
+- `MockAuthService` — a no-backend implementation for the dev host and
+  SwiftUI previews (zero configuration, simulated latency).
+- `AuthFlowView`, `LoginView`, and `SignUpView` now accept a `service:` and an
+  `onAuthenticated:` callback to route the signed-in user into your app.
+
+### Changed
+- `AuthViewModel` now performs real async auth calls through the injected
+  `AuthService`, surfaces thrown errors as friendly messages, and exposes
+  `currentUser`. Fully backward compatible — all new parameters default to
+  `MockAuthService`, so existing call sites keep working unchanged.
+
 ## [1.1.0] - 2026-06-10
 
 ### Added

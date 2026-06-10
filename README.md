@@ -100,9 +100,73 @@ AuthAssets.bundle = .module   // or any Bundle you choose
 
 ## Wiring up a real backend
 
-`AuthViewModel` ships with placeholder logic and validation. Connect it to
-your auth provider (Sign in with Apple, Supabase, Firebase, etc.) by
-replacing the bodies of `login()`, `signUp()`, and the social methods.
+`FeatureAuth` is **backend-agnostic**. The UI depends only on the
+`AuthService` protocol — it never imports Firebase or any SDK. You inject a
+concrete implementation at your app's composition root, so you can swap
+providers (Firebase today, Supabase tomorrow) without touching the UI.
+
+### 1. Implement `AuthService` in a separate package
+
+```swift
+import FeatureAuth
+import FirebaseAuth
+
+public final class FirebaseAuthService: AuthService {
+    public init() {}
+
+    public func signIn(email: String, password: String) async throws -> AuthUser {
+        let result = try await Auth.auth().signIn(withEmail: email, password: password)
+        return AuthUser(id: result.user.uid, email: result.user.email)
+    }
+
+    public func signUp(firstName: String, lastName: String,
+                       email: String, password: String) async throws -> AuthUser {
+        let result = try await Auth.auth().createUser(withEmail: email, password: password)
+        return AuthUser(id: result.user.uid, email: result.user.email,
+                        displayName: "\(firstName) \(lastName)")
+    }
+
+    public func signIn(with provider: SocialAuthProvider) async throws -> AuthUser {
+        throw AuthServiceError.notImplemented(provider.rawValue)
+    }
+
+    public func sendPasswordReset(email: String) async throws {
+        try await Auth.auth().sendPasswordReset(withEmail: email)
+    }
+}
+```
+
+### 2. Inject it at the composition root (your app)
+
+```swift
+import FeatureAuth
+import Auth // your Firebase-backed package
+
+AuthFlowView(
+    config: AuthConfiguration(appName: "Script Builder"),
+    service: FirebaseAuthService()
+) { user in
+    session.signedIn(as: user) // route into your app
+}
+```
+
+With no `service:` argument, `FeatureAuth` falls back to a built-in
+`MockAuthService` — perfect for the dev host and SwiftUI previews (no
+Firebase, no network, no config).
+
+## Localization
+
+FeatureAuth ships a String Catalog (`Localizable.xcstrings`) inside the
+package, so all built-in copy — labels, placeholders, buttons, accessibility
+labels, and validation messages — is fully localized. **English** and
+**Spanish** are included out of the box, and strings resolve from the package
+bundle (`.module`), so they work no matter which app embeds the package.
+
+To add a language, open `Sources/FeatureAuth/Resources/Localizable.xcstrings`
+in Xcode and add the locale — Xcode fills in every key automatically.
+
+Any copy you pass via `AuthConfiguration` is used verbatim, so you can also
+localize app-specific strings on your side and hand them in.
 
 ## Components
 
