@@ -3,9 +3,24 @@
 All notable changes to FeatureAuth are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.0.0] - 2026-06-11
+
+### Breaking
+- The brand color tokens were renamed to role-based, color-agnostic names so
+  they read correctly for any brand palette. Update any direct references:
+  - `AuthTheme.brandBlue` → `AuthTheme.brandPrimary`
+  - `AuthTheme.brandTeal` → `AuthTheme.brandSecondary`
+  - `AuthTheme.brandDeep` → `AuthTheme.brandTertiary`
 
 ### Added
+- **Client theming via `AuthPalette`** — a public, injectable struct holding
+  every color and layout token. Pass your own palette to `AuthFlowView`,
+  `LoginView`, or `SignUpView` via the new `theme:` parameter to fully re-skin
+  the experience without touching the kit's source. `AuthPalette.default`
+  reproduces FeatureAuth's signature look, and a `with(...)` builder lets you
+  override just a few tokens (e.g. `AuthPalette.default.with(brandPrimary: .purple)`).
+  The active palette is also exposed through the SwiftUI environment
+  (`\.authPalette`) for custom components.
 - **`AuthBackground`** — an ambient, living backdrop for the auth screens.
   Three soft, blurred glow blobs (teal, blue, periwinkle) drift slowly on
   independent looping animations over the sky-to-periwinkle gradient, gently
@@ -16,14 +31,6 @@ adheres to [Semantic Versioning](https://semver.org/).
   gleam that sweeps slowly across a view. Tuned for a refined, luxury accent
   (3.2s sweep, 2.4s pause, low-intensity highlight) and applied to the brand
   badge in `AuthBrandHeader`. Respects **Reduce Motion**.
-
-### Changed
-- `blobTeal`, `blobBlue`, and `blobDeep` color tokens added to `AuthTheme`,
-  tuned for both light and dark mode.
-
-## [1.3.0] - 2026-06-10
-
-### Added
 - **Full localization** via a String Catalog (`Localizable.xcstrings`) shipped
   with the package. Every user-facing string — field labels, placeholders,
   buttons, links, dividers, accessibility labels, alerts, and validation
@@ -32,6 +39,10 @@ adheres to [Semantic Versioning](https://semver.org/).
 - `defaultLocalization: "en"` declared in `Package.swift`.
 
 ### Changed
+- `blobTeal`, `blobBlue`, and `blobDeep` color tokens added to `AuthTheme`,
+  tuned for both light and dark mode.
+- `AuthTheme` is now a thin accessor over the currently active `AuthPalette`,
+  so all existing `AuthTheme.x` token references reflect the injected theme.
 - `AuthConfiguration` defaults are now localized. Its initializer parameters
   are optional (`nil` → localized fallback), so existing call sites that pass
   explicit copy are unaffected.
