@@ -14,7 +14,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(path: "../AuthDomain")
+        .package(url: "https://github.com/patrickridd/AuthDomain.git", from: "1.0.0")
     ],
     targets: [
         .target(
