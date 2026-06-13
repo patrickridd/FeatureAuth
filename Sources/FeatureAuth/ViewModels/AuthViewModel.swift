@@ -1,4 +1,5 @@
 import SwiftUI
+import Observation
 import AuthDomain
 
 /// Drives the login and signup screens.
@@ -7,26 +8,27 @@ import AuthDomain
 /// `AuthService`. Swap in a `FirebaseAuthService`, `SupabaseAuthService`,
 /// or the built-in `MockAuthService` without changing any UI code.
 @MainActor
-public final class AuthViewModel: ObservableObject {
+@Observable
+public final class AuthViewModel {
 
     // MARK: - Shared inputs
-    @Published public var email: String = ""
-    @Published public var password: String = ""
+    public var email: String = ""
+    public var password: String = ""
 
     // MARK: - Sign up inputs
-    @Published public var firstName: String = ""
-    @Published public var lastName: String = ""
+    public var firstName: String = ""
+    public var lastName: String = ""
 
     // MARK: - State
-    @Published public var isLoading: Bool = false
-    @Published public var errorMessage: String?
-    @Published public private(set) var currentUser: AuthUser?
+    public var isLoading: Bool = false
+    public var errorMessage: String?
+    public private(set) var currentUser: AuthUser?
 
     // MARK: - Dependencies
     /// Exposed so a parent screen (e.g. Login presenting Sign Up) can hand the
     /// same backend down to a child without re-storing it itself.
-    public let service: AuthService
-    public let onAuthenticated: (AuthUser) -> Void
+    @ObservationIgnored public let service: AuthService
+    @ObservationIgnored public let onAuthenticated: (AuthUser) -> Void
 
     /// - Parameters:
     ///   - service: the auth backend. Defaults to `MockAuthService` so the
@@ -113,6 +115,8 @@ public final class AuthViewModel: ObservableObject {
             defer { isLoading = false }
             do {
                 try await work()
+            } catch let error where error.isAuthCancellation {
+                // User backed out of the sign-in flow — not a real error.
             } catch {
                 errorMessage = error.localizedDescription
             }

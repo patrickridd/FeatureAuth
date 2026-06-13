@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Centers content on a single screen when it fits, and falls back to a
 /// scroll view when the content is taller than the available space (e.g.
@@ -12,9 +13,19 @@ struct FitOrScrollLayout<Content: View>: View {
                 content
                     .frame(maxWidth: .infinity)
                     .frame(minHeight: proxy.size.height)
+                    .contentShape(Rectangle())
+                    .onTapGesture { dismissKeyboard() }
             }
             .scrollBounceBehavior(.basedOnSize)
+            .scrollDismissesKeyboard(.interactively)
         }
+    }
+
+    private func dismissKeyboard() {
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil, from: nil, for: nil
+        )
     }
 }
 

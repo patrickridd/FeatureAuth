@@ -1,54 +1,87 @@
-import XCTest
+import Testing
 @testable import FeatureAuth
+import AuthDomain
 
 @MainActor
-final class AuthViewModelTests: XCTestCase {
+@Suite("AuthViewModel")
+struct AuthViewModelTests {
 
-    func testLoginValidationRejectsBadInput() {
-        let vm = AuthViewModel()
-        vm.email = "not-an-email"
-        vm.password = "123"
-        XCTAssertFalse(vm.isLoginValid)
+    @Test("Login validation rejects an invalid email and short password")
+    func loginValidationRejectsBadInput() {
+        // Given
+        let sut = AuthViewModel()
+
+        // When
+        sut.email = "not-an-email"
+        sut.password = "123"
+
+        // Then
+        #expect(sut.isLoginValid == false)
     }
 
-    func testLoginValidationAcceptsGoodInput() {
-        let vm = AuthViewModel()
-        vm.email = "jane@example.com"
-        vm.password = "hunter2"
-        XCTAssertTrue(vm.isLoginValid)
+    @Test("Login validation accepts a well-formed email and password")
+    func loginValidationAcceptsGoodInput() {
+        // Given
+        let sut = AuthViewModel()
+
+        // When
+        sut.email = "jane@example.com"
+        sut.password = "hunter2"
+
+        // Then
+        #expect(sut.isLoginValid)
     }
 
-    func testSignUpValidationRequiresAllFields() {
-        let vm = AuthViewModel()
-        vm.email = "jane@example.com"
-        vm.password = "hunter2"
-        XCTAssertFalse(vm.isSignUpValid, "Missing names should fail")
-        vm.firstName = "Jane"
-        vm.lastName = "Doe"
-        XCTAssertTrue(vm.isSignUpValid)
+    @Test("Sign-up validation requires every field to be filled")
+    func signUpValidationRequiresAllFields() {
+        // Given
+        let sut = AuthViewModel()
+        sut.email = "jane@example.com"
+        sut.password = "hunter2"
+
+        // When / Then — names still missing
+        #expect(sut.isSignUpValid == false)
+
+        // When — names provided
+        sut.firstName = "Jane"
+        sut.lastName = "Doe"
+
+        // Then
+        #expect(sut.isSignUpValid)
     }
 
-    func testSuccessfulLoginRoutesUserThroughCallback() async {
+    @Test("A successful login routes the user through the callback")
+    func successfulLoginRoutesUserThroughCallback() async {
+        // Given
         var received: AuthUser?
-        let vm = AuthViewModel(service: MockAuthService(delay: 0)) { received = $0 }
-        vm.email = "jane@example.com"
-        vm.password = "hunter2"
-        vm.login()
-        // Let the async auth task complete.
+        let sut = AuthViewModel(service: MockAuthService(delay: 0)) { received = $0 }
+        sut.email = "jane@example.com"
+        sut.password = "hunter2"
+
+        // When
+        sut.login()
         try? await Task.sleep(nanoseconds: 50_000_000)
-        XCTAssertEqual(received?.email, "jane@example.com")
-        XCTAssertEqual(vm.currentUser?.email, "jane@example.com")
-        XCTAssertNil(vm.errorMessage)
+
+        // Then
+        #expect(received?.email == "jane@example.com")
+        #expect(sut.currentUser?.email == "jane@example.com")
+        #expect(sut.errorMessage == nil)
     }
 
-    func testFailingServiceSurfacesErrorMessage() async {
-        let vm = AuthViewModel(service: FailingAuthService())
-        vm.email = "jane@example.com"
-        vm.password = "hunter2"
-        vm.login()
+    @Test("A failing service surfaces an error message and no user")
+    func failingServiceSurfacesErrorMessage() async {
+        // Given
+        let sut = AuthViewModel(service: FailingAuthService())
+        sut.email = "jane@example.com"
+        sut.password = "hunter2"
+
+        // When
+        sut.login()
         try? await Task.sleep(nanoseconds: 50_000_000)
-        XCTAssertNotNil(vm.errorMessage)
-        XCTAssertNil(vm.currentUser)
+
+        // Then
+        #expect(sut.errorMessage != nil)
+        #expect(sut.currentUser == nil)
     }
 }
 

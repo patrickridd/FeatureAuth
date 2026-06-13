@@ -2,7 +2,7 @@ import SwiftUI
 import AuthDomain
 
 public struct SignUpView: View {
-    @StateObject private var viewModel: AuthViewModel
+    @State private var viewModel: AuthViewModel
     @Environment(\.dismiss) private var dismiss
     @ScaledMetric(relativeTo: .body) private var sectionGap: CGFloat = 16
 
@@ -16,8 +16,8 @@ public struct SignUpView: View {
         self.config = config
         self.theme = theme
         AuthTheme.current = theme
-        _viewModel = StateObject(wrappedValue: AuthViewModel(service: service,
-                                                             onAuthenticated: onAuthenticated))
+        _viewModel = State(wrappedValue: AuthViewModel(service: service,
+                                                       onAuthenticated: onAuthenticated))
     }
 
     public var body: some View {
@@ -109,8 +109,10 @@ public struct SignUpView: View {
             SocialIconButton(style: .google, label: L10n.A11y.signUpGoogle) {
                 viewModel.continueWithGoogle()
             }
-            SocialIconButton(style: .facebook, label: L10n.A11y.signUpFacebook) {
-                viewModel.continueWithFacebook()
+            if config.showFacebookLogin {
+                SocialIconButton(style: .facebook, label: L10n.A11y.signUpFacebook) {
+                    viewModel.continueWithFacebook()
+                }
             }
         }
     }
