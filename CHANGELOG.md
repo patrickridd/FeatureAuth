@@ -3,6 +3,31 @@
 All notable changes to FeatureAuth are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.1.0] - 2026-06-13
+
+### Added
+- **`AuthConfiguration.showFacebookLogin`** — a new flag (defaults to `true`)
+  that gates the Facebook sign-in button on both the Login and Sign Up screens.
+  Set it to `false` to begin phasing Facebook out without touching any other
+  code. Fully backward compatible.
+
+### Changed
+- **Modernized state management** — `AuthViewModel` now uses the `@Observable`
+  macro instead of `ObservableObject`/`@Published`, and the screens own it via
+  `@State`. The public API is unchanged; existing call sites and bindings work
+  as before. (Requires iOS 17+, which was already the package minimum.)
+- **Migrated the test suite to Swift Testing** (`@Suite`/`@Test`/`#expect`) with
+  a clear Given/When/Then structure for readability.
+
+### Fixed
+- **Cancelling a social sign-in no longer shows an error alert.** When a user
+  backs out of Apple, Google, or Facebook sign-in, the flow now returns quietly
+  to the auth screen instead of surfacing a "user cancelled" message. Genuine
+  errors still surface as before.
+- **Keyboard dismissal** — the email/password keyboard can now be dismissed by
+  tapping anywhere outside a field or by swiping down (interactive drag),
+  applied consistently across Login and Sign Up.
+
 ## [2.0.0] - 2026-06-11
 
 ### Breaking
