@@ -103,16 +103,26 @@ public struct SignUpView: View {
 
     private var socialRow: some View {
         HStack(spacing: AuthTheme.controlSpacing) {
+            ForEach(config.signUpProviders, id: \.self) { provider in
+                socialButton(for: provider)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func socialButton(for provider: SocialAuthProvider) -> some View {
+        switch provider {
+        case .apple:
             SocialIconButton(style: .apple, label: L10n.A11y.signUpApple) {
                 viewModel.continueWithApple()
             }
+        case .google:
             SocialIconButton(style: .google, label: L10n.A11y.signUpGoogle) {
                 viewModel.continueWithGoogle()
             }
-            if config.showFacebookLogin {
-                SocialIconButton(style: .facebook, label: L10n.A11y.signUpFacebook) {
-                    viewModel.continueWithFacebook()
-                }
+        case .facebook:
+            SocialIconButton(style: .facebook, label: L10n.A11y.signUpFacebook) {
+                viewModel.continueWithFacebook()
             }
         }
     }

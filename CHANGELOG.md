@@ -3,6 +3,27 @@
 All notable changes to FeatureAuth are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.0.0] - 2026-06-14
+
+### Added
+- **Per-screen social provider lists** — `AuthConfiguration` now exposes
+  `loginProviders: [SocialAuthProvider]` and `signUpProviders: [SocialAuthProvider]`,
+  letting you configure the Login and Sign Up screens independently. The common
+  use case: keep a provider on Login (so existing users can still sign in) while
+  dropping it from Sign Up (to prevent new accounts with it). Both default to
+  `[.apple, .google, .facebook]`, so the rendered UI is unchanged unless you
+  customize them.
+
+### Breaking
+- **Removed `AuthConfiguration.showFacebookLogin`** in favor of the new
+  `loginProviders` / `signUpProviders` arrays. To migrate:
+  - `showFacebookLogin: true` (or omitted) → no change needed; the defaults
+    already include all three providers.
+  - `showFacebookLogin: false` → pass arrays without `.facebook`, e.g.
+    `loginProviders: [.apple, .google], signUpProviders: [.apple, .google]`.
+
+---
+
 ## [2.2.0] - 2026-06-14
 
 ### Changed
