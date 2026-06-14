@@ -150,6 +150,40 @@
         }
       }
     },
+    "auth.status.signingIn" : {
+      "comment" : "Shown on the loading overlay while logging the user in.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing you in…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciando sesión…"
+          }
+        }
+      }
+    },
+    "auth.status.signingUp" : {
+      "comment" : "Shown on the loading overlay while creating the account.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creating your account…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creando tu cuenta…"
+          }
+        }
+      }
+    },
     "auth.alert.title" : {
       "comment" : "Title of the error alert.",
       "localizations" : {

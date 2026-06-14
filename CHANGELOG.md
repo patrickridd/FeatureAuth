@@ -3,6 +3,24 @@
 All notable changes to FeatureAuth are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [3.1.0] - 2026-06-14
+
+### Added
+- **Shimmering loading overlay** — while a login or sign-up request is in
+  flight, both screens now present a glassy, dimmed veil with a centered card:
+  the app badge plus shimmering skeleton bars and a localized status line
+  ("Signing you in…" / "Creating your account…"). It reuses the existing
+  on-brand shimmer sweep, animates in and out smoothly, respects **Reduce
+  Motion**, and is announced politely to VoiceOver. Localized in English and
+  Spanish. No API changes — it's driven by the existing `isLoading` state.
+
+### Changed
+- Bumped `AuthDomain` dependency to `from: "1.2.0"` to pick up the longer
+  `MockAuthService` default delay, so the new loading overlay reads clearly in
+  dev hosts and previews.
+
+---
+
 ## [3.0.0] - 2026-06-14
 
 ### Added

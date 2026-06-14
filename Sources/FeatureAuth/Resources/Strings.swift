@@ -60,6 +60,12 @@ enum L10n {
         static var closeSignUp: String { L10n.string("auth.a11y.closeSignUp") }
     }
 
+    // MARK: - Loading status
+    enum Status {
+        static var signingIn: String { L10n.string("auth.status.signingIn") }
+        static var signingUp: String { L10n.string("auth.status.signingUp") }
+    }
+
     // MARK: - Alerts & messages
     enum Alert {
         static var title: String { L10n.string("auth.alert.title") }

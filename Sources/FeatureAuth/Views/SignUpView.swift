@@ -22,6 +22,12 @@ public struct SignUpView: View {
 
     public var body: some View {
         content
+            .overlay {
+                if viewModel.isLoading {
+                    AuthLoadingOverlay(message: L10n.Status.signingUp)
+                }
+            }
+            .animation(.easeInOut(duration: 0.25), value: viewModel.isLoading)
             .environment(\.authPalette, theme)
             .onAppear { AuthTheme.current = theme }
     }
