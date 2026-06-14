@@ -3,6 +3,18 @@
 All notable changes to FeatureAuth are documented here. This project
 adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.2.0] - 2026-06-14
+
+### Changed
+- Bumped `AuthDomain` dependency to `from: "1.1.0"` to pick up the new
+  `signOut() throws` protocol requirement.
+
+### Chore
+- `Package.resolved` is now gitignored (library packages should not pin their
+  transitive dependency graph).
+
+---
+
 ## [2.1.0] - 2026-06-13
 
 ### Added
