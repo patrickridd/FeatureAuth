@@ -1,12 +1,48 @@
-# Xcode / SwiftPM build artifacts
-.build/
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+!*.xcworkspace/xcshareddata/
+
+# Ignore everything inside .swiftpm
 .swiftpm/
-DerivedData/
-*.xcodeproj/xcuserdata/
-*.xcworkspace/xcuserdata/
+
+# Whitelist the specific xcuserdata tree you need
+!*.swiftpm/xcode/xcuserdata/
+!*.swiftpm/xcode/xcuserdata/patrickridd.xcuserdatad/
+!*.swiftpm/xcode/xcuserdata/patrickridd.xcuserdatad/xcschemes/
+!*.swiftpm/xcode/xcuserdata/patrickridd.xcuserdatad/xcschemes/xcschememanagement.plist
 
 # macOS
 .DS_Store
+*.swp
+*.swo
+*~.nib
+DerivedData/
+build/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
 
-# Resolved dependencies (libraries usually commit Package.resolved at the app level instead)
-Package.resolved
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# Expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# Misc
+*.log
+.env
+.env.local
