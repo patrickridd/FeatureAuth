@@ -46,3 +46,6 @@ web-build/
 *.log
 .env
 .env.local
+
+# Libraries should not commit Package.resolved — consumers resolve their own graph.
+Package.resolved
