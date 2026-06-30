@@ -7,14 +7,8 @@
 !*.xcworkspace/contents.xcworkspacedata
 !*.xcworkspace/xcshareddata/
 
-# Ignore everything inside .swiftpm
+# Ignore everything inside .swiftpm (Xcode-managed user data, schemes, etc.)
 .swiftpm/
-
-# Whitelist the specific xcuserdata tree you need
-!*.swiftpm/xcode/xcuserdata/
-!*.swiftpm/xcode/xcuserdata/patrickridd.xcuserdatad/
-!*.swiftpm/xcode/xcuserdata/patrickridd.xcuserdatad/xcschemes/
-!*.swiftpm/xcode/xcuserdata/patrickridd.xcuserdatad/xcschemes/xcschememanagement.plist
 
 # macOS
 .DS_Store
